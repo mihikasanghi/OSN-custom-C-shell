@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "headers.h": "c",
+        "string.h": "c",
+        "pastevents.h": "c"
+    }
+}
