@@ -13,6 +13,8 @@
 #include <grp.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #include "prompt.h"
 #include "distribute.h"
 #include "commands.h"
@@ -21,5 +23,7 @@
 #include "proclore.h"
 #include "seek.h"
 #include "sysCmd.h"
+#include "activities.h"
+#include "iman.h"
 
 #endif

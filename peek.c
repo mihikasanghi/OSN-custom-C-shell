@@ -121,31 +121,32 @@ void list_directory(const char *path, int show_all, int long_format)
     }
 }
 
-int peek_func(char *save_ptr)
+int peek_func(char **token)
 {
-    char *token = strtok_r(NULL, " ", &save_ptr);
+    int idx = 1;
+    // char *token = strtok_r(NULL, " ", &save_ptr);
     int show_all = 0;
     int long_format = 0;
     char path[4096];
     strcpy(path, cwd);
 
-    while (token != NULL)
+    while (token[idx] != NULL)
     {
-        // printf("flag: %s.", token);
-        if (strcmp(token, "-a") == 0 || strcmp(token, "-a\n") == 0)
+        // printf("flag: %s.", token[idx]);
+        if (strcmp(token[idx], "-a") == 0 || strcmp(token[idx], "-a\n") == 0)
         {
             show_all = 1;
         }
-        else if (strcmp(token, "-l") == 0 || strcmp(token, "-l\n") == 0)
+        else if (strcmp(token[idx], "-l") == 0 || strcmp(token[idx], "-l\n") == 0)
         {
             long_format = 1;
         }
-        else if (strcmp(token, "-al") == 0 || strcmp(token, "-al\n") == 0)
+        else if (strcmp(token[idx], "-al") == 0 || strcmp(token[idx], "-al\n") == 0)
         {
             show_all = 1;
             long_format = 1;
         }
-        else if (strcmp(token, "-la") == 0 || strcmp(token, "-la\n") == 0)
+        else if (strcmp(token[idx], "-la") == 0 || strcmp(token[idx], "-la\n") == 0)
         {
             show_all = 1;
             long_format = 1;
@@ -153,26 +154,26 @@ int peek_func(char *save_ptr)
         else
         {
             char destination_dir[4096];
-            if (token[0] == '~' && token[1] == '/')
+            if (token[idx][0] == '~' && token[idx][1] == '/')
             {
                 // go to this absolute path
                 strcpy(destination_dir, home_dir);
                 strcat(destination_dir, "/");
-                strcat(destination_dir, token + 2);
+                strcat(destination_dir, token[idx] + 2);
                 // remove '' from destination_dir
                 destination_dir[strlen(destination_dir) - 1] = '\0';
             }
-            else if (token[0] == '~')
+            else if (token[idx][0] == '~')
             {
                 strcpy(destination_dir, home_dir);
             }
 
-            else if (token[0] == '-')
+            else if (token[idx][0] == '-')
             {
                 // go to previous directory
                 strcpy(destination_dir, prev_dir);
             }
-            else if (token[0] == '.' && token[1] == '.')
+            else if (token[idx][0] == '.' && token[idx][1] == '.')
             {
                 // go to parent directory
                 // find the last '/'
@@ -184,16 +185,16 @@ int peek_func(char *save_ptr)
                 }
                 destination_dir[i] = '\0';
             }
-            else if (token[0] == '.' && token[1] == '/')
+            else if (token[idx][0] == '.' && token[idx][1] == '/')
             {
                 // add path to current path
                 // printf("%s\n", cwd);
                 strcpy(destination_dir, cwd);
                 strcat(destination_dir, "/");
-                strcat(destination_dir, token + 2);
+                strcat(destination_dir, token[idx] + 2);
                 destination_dir[strlen(destination_dir) - 1] = '\0';
             }
-            else if (token[0] == '.')
+            else if (token[idx][0] == '.')
             {
                 // do nothing
                 strcpy(destination_dir, cwd);
@@ -203,7 +204,7 @@ int peek_func(char *save_ptr)
                 // path is absolute, so no modification needed
                 strcpy(destination_dir, cwd);
                 strcat(destination_dir, "/");
-                strcat(destination_dir, token);
+                strcat(destination_dir, token[idx]);
                 destination_dir[strlen(destination_dir) - 1] = '\0';
             }
             struct stat st;
@@ -216,7 +217,8 @@ int peek_func(char *save_ptr)
                 printf("Invalid path\n");
             }
         }
-        token = strtok_r(NULL, " ", &save_ptr);
+        // token[idx] = strtok_r(NULL, " ", &save_ptr);
+        idx++;
     }
 
     list_directory(path, show_all, long_format);

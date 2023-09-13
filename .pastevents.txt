@@ -1,5 +1,16 @@
-echo hi;
-echo hi;;
-echo hi;;;
-echo hi;;;
-echo hello
+sleep 20 &
+cat /
+echo hiiiii &
+echo byby
+clear;activities;echo hi &
+echo hi &
+echo hi &;echo bye &;echo hi &;echo bye &;echo hello &;peek;;echo hi&;echo ok&;&;echo no&;&;echo hi&
+echo bye&
+echo ok&;echo no&; ok&;echo hi &
+echo bye &
+echo bo &;echo hi;ho bye &
+echo bo &;sleep 2 &;echo jwdjwvedj&;echo l;dj&;echo 123456&;sleep 4&;456&;clear;56&;echo hi &;&;456&;clear;56&;echo by &;echo bybeybye &;echo l;dj&;echo 123456&;sleep 4&;456&;clear;56&;echo hi &;&;456&;clear;56&;echo by &;echo hi &;echo bye&;6&;echo by &;echo hi &;sleep 5 &;;echo hi&;o hi &;sleep 5 &;;iMan
+exit
+iMan sleep;&;echo bye&;6&;echo by &;echo hi &;sleep 5 &;;echo hi&;o hi &;sleep 5 &;;iMan
+exit
+iMan sleep;

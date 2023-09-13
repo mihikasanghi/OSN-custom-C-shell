@@ -1,8 +1,9 @@
 #include "headers.h"
 
-void proclore_func(char *save_ptr)
+void proclore_func(char **token)
 {
-    char *token = strtok_r(NULL, " ", &save_ptr);
+    // char *token = strtok_r(NULL, " ", &save_ptr);
+    int idx = 1;
 
     // Initializing variables
     pid_t pid;
@@ -11,14 +12,14 @@ void proclore_func(char *save_ptr)
     char path[4096];
     FILE *file;
 
-    if (token == NULL)
+    if (token[idx] == NULL)
     {
         pid = getpid(); // get the process ID of the current process
     }
     else
     {
-        token[strlen(token) - 1] = '\0';
-        pid = atoi(token);
+        token[idx][strlen(token[idx]) - 1] = '\0';
+        pid = atoi(token[idx]);
     }
 
     // Get process info from /proc/[pid]/stat

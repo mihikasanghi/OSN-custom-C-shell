@@ -1,7 +1,7 @@
 #ifndef __SEEK_H
 #define __SEEK_H
 
-int seek_func(char* save_ptr);
+int seek_func(char** token);
 void remove_extension(char *str);
 
 

@@ -34,42 +34,45 @@ void initialise_terminal()
     gethostname(system_name, 4096);
 }
 
-void warp_func(char *save_ptr)
+void warp_func(char** token)
 {
-    char *token = strtok_r(NULL, " ", &save_ptr);
+    // char *token = strtok_r(NULL, " ", &save_ptr);
     // printf("%s\n", token);
-    if (token == NULL)
+    // printf("Hi\n");
+    int idx = 1;
+    if (token[idx] == NULL)
     {
         strcpy(prev_dir, cwd);
         strcpy(cwd, home_dir);
         printf("%s\n", home_dir);
     }
-    while (token != NULL)
+    while (token[idx] != NULL)
     {
         char destination_dir[4096];
-        if (token[0] == '~' && token[1] == '/')
+        if (token[idx][0] == '~' && token[idx][1] == '/')
         {
             // go to this absolute path
             strcpy(destination_dir, home_dir);
             strcat(destination_dir, "/");
-            strcat(destination_dir, token + 2);
+            strcat(destination_dir, token[idx] + 2);
             // remove '' from destination_dir
             destination_dir[strlen(destination_dir) - 1] = '\0';
         }
-        else if (token[0] == '~')
+        else if (token[idx][0] == '~')
         {
             strcpy(destination_dir, home_dir);
         }
 
-        else if (token[0] == '-')
+        else if (token[idx][0] == '-')
         {
             // go to previous directory
             strcpy(destination_dir, prev_dir);
         }
-        else if (token[0] == '.' && token[1] == '.')
+        else if (token[idx][0] == '.' && token[idx][1] == '.')
         {
             // go to parent directory
             // find the last '/'
+            // printf("..\n");
             strcpy(destination_dir, cwd);
             int i = strlen(destination_dir) - 1;
             while (destination_dir[i] != '/')
@@ -78,31 +81,31 @@ void warp_func(char *save_ptr)
             }
             destination_dir[i] = '\0';
         }
-        else if (token[0] == '.' && token[1] == '/')
+        else if (token[idx][0] == '.' && token[idx][1] == '/')
         {
             // add apth to current path
             // printf("%s\n", cwd);
             strcpy(destination_dir, cwd);
             strcat(destination_dir, "/");
-            strcat(destination_dir, token + 2);
+            strcat(destination_dir, token[idx] + 2);
             destination_dir[strlen(destination_dir) - 1] = '\0';
         }
-        else if (token[0] == '.')
+        else if (token[idx][0] == '.')
         {
             // do nothing
             strcpy(destination_dir, cwd);
         }
-        else if (token[0] == '/')
+        else if (token[idx][0] == '/')
         {
             // go to absolute path
-            strcpy(destination_dir, token);
+            strcpy(destination_dir, token[idx]);
         }
         else
         {
             // path is absolute, so no modification needed
             strcpy(destination_dir, cwd);
             strcat(destination_dir, "/");
-            strcat(destination_dir, token);
+            strcat(destination_dir, token[idx]);
             destination_dir[strlen(destination_dir) - 1] = '\0';
         }
 
@@ -115,11 +118,13 @@ void warp_func(char *save_ptr)
         }
         else
         {
+            // printf("%s\n", token[idx]);
             printf("Invalid path\n");
         }
 
-        // printf("%s\n", token);
-        token = strtok_r(NULL, " ", &save_ptr);
+        // printf("%s\n", token[idx]);
+        // token[idx] = strtok_r(NULL, " ", &save_ptr);
+        idx++;
     }
 
     return;

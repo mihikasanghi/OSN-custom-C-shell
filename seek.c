@@ -97,20 +97,21 @@ void traverse_and_search(const char *dir_name, const char *search, SearchOptions
     closedir(dir);
 }
 
-int seek_func(char *save_ptr)
+int seek_func(char **token)
 {
-    char *token = strtok_r(NULL, " ", &save_ptr);
+    // char *token = strtok_r(NULL, " ", &save_ptr);
+    int idx = 1;
     SearchOptions options = {1, 1, 0, 0};
     const char *search_term = NULL;
     char *target_directory = "."; // default to current directory
 
     int flag_dir = 0, flag_d = 0, flag_f = 0, flag_e = 0, flag_con = 0;
     // Argument parsing
-    while (token != NULL)
+    while (token[idx] != NULL)
     {
-        if (token[0] == '-')
+        if (token[idx][0] == '-')
         {
-            if (strcmp(token, "-d") == 0)
+            if (strcmp(token[idx], "-d") == 0)
             {
                 options.search_dirs = 1;
                 options.search_files = 0;
@@ -120,7 +121,7 @@ int seek_func(char *save_ptr)
                     flag_con = 1;
                 }
             }
-            else if (strcmp(token, "-f") == 0)
+            else if (strcmp(token[idx], "-f") == 0)
             {
                 options.search_files = 1;
                 options.search_dirs = 0;
@@ -130,26 +131,27 @@ int seek_func(char *save_ptr)
                     flag_con = 1;
                 }
             }
-            else if (strcmp(token, "-e") == 0)
+            else if (strcmp(token[idx], "-e") == 0)
             {
                 options.exec_flag = 1;
             }
         }
         else
         {
-            if(token[strlen(token)-1] == '\n') {
-                token[strlen(token)-1] = '\0';
+            if(token[idx][strlen(token[idx])-1] == '\n') {
+                token[idx][strlen(token[idx])-1] = '\0';
                 if(flag_dir == 1) {
-                    target_directory = token;
+                    target_directory = token[idx];
                 }
             }
             else {
                 flag_dir = 1;
             }
-            search_term = token;
+            search_term = token[idx];
             break;
         }
-        token = strtok_r(NULL, " ", &save_ptr);
+        // token[idx] = strtok_r(NULL, " ", &save_ptr);
+        idx++;
     }
 
     if(flag_con) {

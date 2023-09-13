@@ -3,11 +3,9 @@
 
 #include "headers.h"
 
-// typedef struct {
-//     pid_t pid;
-//     char commandName[100];
-// };
 void reviewBGTasks();
-void sysCmd_func(char *command, char *save_ptr, int isBackground);
+void sysCmd_func(char *command, char **token, int isBackground);
+void addToActFile(pid_t taskID, char *cmd);
+void removeFromActFile(pid_t taskID);
 
 #endif

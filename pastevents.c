@@ -1,10 +1,12 @@
 #include "headers.h"
 
-void pastevents_func(char *save_ptr)
+void pastevents_func(char **token)
 {
-    char *token = strtok_r(NULL, " ", &save_ptr);
-    if (token == NULL)
+    // char *token = strtok_r(NULL, " ", &save_ptr);
+    int idx = 1;
+    if (token[idx] == NULL)
     {
+        // printf("Hello\n");
         FILE *file = fopen(".pastevents.txt", "r");
         char buffer[4096]; // Adjust the buffer size as needed
 
@@ -14,18 +16,17 @@ void pastevents_func(char *save_ptr)
         }
         fclose(file);
     }
-    else if (strcmp(token, "purge\n") == 0 || strcmp(token, "purge") == 0)
+    else if (strcmp(token[idx], "purge\n") == 0 || strcmp(token[idx], "purge") == 0)
     {
         FILE *file = fopen(".pastevents.txt", "w");
         fclose(file);
         history_full = 0;
         history_index = 0;
     }
-    else if (strcmp(token, "execute") == 0)
+    else if (strcmp(token[idx], "execute") == 0)
     {
-        token = strtok_r(NULL, " ", &save_ptr);
-        int index = atoi(token);
-        //write code to print nth line of a file
+        idx++;
+        int index = atoi(token[idx]);
 
         FILE *file = fopen(".pastevents.txt", "r");
         char buffer[512]; // Adjust the buffer size as needed
