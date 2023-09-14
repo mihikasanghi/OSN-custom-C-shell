@@ -9,4 +9,8 @@ extern int TLE_time;
 extern char TLE_process[512];
 void prompt();
 
+extern struct Node* activity;
+extern int fgID;
+extern char** fgName;
+
 #endif

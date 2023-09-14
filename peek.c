@@ -215,6 +215,7 @@ int peek_func(char **token)
             else
             {
                 printf("Invalid path\n");
+                return 0;
             }
         }
         // token[idx] = strtok_r(NULL, " ", &save_ptr);

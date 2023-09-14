@@ -1,7 +1,7 @@
 #ifndef __ACTIVITIES_H
 #define __ACTIVITIES_H
 
-int activities_func(char** token);
-
+void activities_func(char** token);
+void updateState(struct Node* head, char* newState, int pid);
 
 #endif

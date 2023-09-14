@@ -4,3 +4,12 @@ int history_full = 0;
 int history_index = 0;
 int TLE_time = 0;
 char TLE_process[512];
+struct Node {
+    char args[50][100];
+    int pid;
+    char state[10];
+    struct Node* next;
+};
+struct Node* activity;
+int fgID = -1;
+char** fgName;

@@ -1,16 +1,17 @@
-sleep 20 &
-cat /
-echo hiiiii &
-echo byby
-clear;activities;echo hi &
-echo hi &
-echo hi &;echo bye &;echo hi &;echo bye &;echo hello &;peek;;echo hi&;echo ok&;&;echo no&;&;echo hi&
-echo bye&
-echo ok&;echo no&; ok&;echo hi &
-echo bye &
-echo bo &;echo hi;ho bye &
-echo bo &;sleep 2 &;echo jwdjwvedj&;echo l;dj&;echo 123456&;sleep 4&;456&;clear;56&;echo hi &;&;456&;clear;56&;echo by &;echo bybeybye &;echo l;dj&;echo 123456&;sleep 4&;456&;clear;56&;echo hi &;&;456&;clear;56&;echo by &;echo hi &;echo bye&;6&;echo by &;echo hi &;sleep 5 &;;echo hi&;o hi &;sleep 5 &;;iMan
-exit
-iMan sleep;&;echo bye&;6&;echo by &;echo hi &;sleep 5 &;;echo hi&;o hi &;sleep 5 &;;iMan
-exit
-iMan sleep;
+sleep 5;;i
+echo hi &;i
+activities;
+sleep 50 &;
+activities;
+ping 25113 20;activities;;activities;;;bg 25113;es;;activities;;;activities;ivities;;;iMan ls;s;;;iMan sleep;;iMan ls; sleep;;clear;p;;iMan grep;;iMan ssh;p;;iMan man;p;;iMan ls;;p;;iMan ls
+iMan ssh;ls
+clear;ssh;ls
+proclore;;ls
+clear;ssh;ls
+sleep 40 &;ar;ssh;ls
+proclore 25362;sleep 32 &;;proclore 25365;;proclore;proclore 25426;proclroe;26;proclore;26;proclore 25480;proclore;80;proclore 25533;ar;ssh;ls
+proclore;;ls
+clear;ssh;ls
+sleep 40 &;ar;ssh;ls
+proclore 25362;sleep 32 &;;proclore 25365;;proclore;proclore 25426;proclroe;26;proclore;26;proclore 25480;proclore;80;sleep 5 &;0;proclore 25538;sh;ls
+proclore 25362;sleep 32 &;;proclore 25365;;proclore;proclore 25426;proclroe;26;proclore;26;proclore 25480;proclore;80;sleep 5 &;0;proclroe;&;0;proclroe;&;0;proclroe;&;0;proclore;roclroe;&;0;proclore;;0;proclore 25655;proclore; 25655;proclore 25730;

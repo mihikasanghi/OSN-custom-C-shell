@@ -12,7 +12,109 @@ struct BGTask
 struct BGTask allTasks[BG_MAX];
 int currentTaskIndex = 0;
 const char *tempFile = "/tmp/bg_tasks_output";
-const char *actFile = "/tmp/activities_output";
+
+struct Node *createNode(char **args, char *state, int pid)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (newNode == NULL)
+    {
+        perror("Memory allocation failed");
+        exit(1);
+    }
+    // strcpy(newNode->args, args);
+    int i = 0;
+    while (args[i] != NULL)
+    {
+        strcpy(newNode->args[i], args[i]);
+        i++;
+    }
+    strcpy(newNode->state, state);
+    newNode->pid = pid;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertInOrder(struct Node **head, char **args, char *state, int pid)
+{
+    struct Node *newNode = createNode(args, state, pid);
+    int areSame = 1;
+
+    // Special case: Insert at the beginning
+    if (*head == NULL || pid < (*head) -> pid)
+    {
+        newNode->next = *head;
+        *head = newNode;
+        return;
+    }
+
+    struct Node *current = *head;
+
+    // Find the node after which the new node should be inserted
+    while (current->next != NULL && current->pid < current->next->pid)
+    {
+        current = current->next;
+    }
+
+    // Insert the new node after the current node
+    newNode->next = current->next;
+    current->next = newNode;
+}
+
+void deleteNode(struct Node **head, int pid)
+{
+    if (*head == NULL)
+    {
+        return; // List is empty, nothing to delete
+    }
+
+    // Special case: Node to be deleted is the head
+    if ((*head)->pid == pid)
+    {
+        struct Node *temp = *head;
+        *head = (*head)->next;
+        free(temp);
+        return;
+    }
+
+    struct Node *current = *head;
+
+    // Find the node before the one to be deleted
+    while (current->next != NULL && current->next->pid != pid)
+    {
+        current = current->next;
+    }
+
+    if (current->next != NULL)
+    {
+        struct Node *temp = current->next;
+        current->next = current->next->next;
+        free(temp);
+    }
+}
+
+struct Node *searchNode(struct Node *head, int pid)
+{
+    struct Node *current = head;
+    while (current != NULL)
+    {
+        if (current->pid == pid)
+        {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL; // Node with data not found
+}
+
+void printList(struct Node *head)
+{
+    struct Node *current = head;
+    while (current != NULL)
+    {
+        printf("%d : %s - %s\n", current->pid, current->args[0], current->state);
+        current = current->next;
+    }
+}
 
 void showOutputAndClean()
 {
@@ -44,7 +146,7 @@ void reviewBGTasks()
             if (WIFEXITED(taskStatus))
             {
                 printf("%s exited normally (%d)\n", allTasks[idx].taskCommand, allTasks[idx].taskPid);
-                removeFromActFile(allTasks[idx].taskPid);
+                deleteNode(&activity, allTasks[idx].taskPid);
             }
             else if (WIFSIGNALED(taskStatus))
             {
@@ -61,109 +163,7 @@ void reviewBGTasks()
     }
 }
 
-void addToActFile(pid_t taskID, char *cmd)
-{
-    int fileDesc0 = open(actFile, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
-    close(fileDesc0);
-    FILE *actFilePtr = fopen(actFile, "r");
-    if (!actFilePtr)
-    {
-        perror("Error opening activities file");
-        return;
-    }
-
-    char actCmd[128];
-    char taskNum[32];
-    sprintf(taskNum, "%d", taskID);
-    strcpy(actCmd, taskNum);
-    strcat(actCmd, ":");
-    strcat(actCmd, cmd);
-    strcat(actCmd, "-Running\n");
-
-    char word[128];
-    char words[2048][128];
-    int numWords = 0;
-
-    while (fscanf(actFilePtr, "%s", word) != EOF)
-    {
-        strcpy(words[numWords], word);
-        numWords++;
-    }
-
-    fclose(actFilePtr);
-
-    int i;
-    for (i = numWords - 1; i >= 0 && strcmp(actCmd, words[i]) < 0; i--)
-    {
-        strcpy(words[i + 1], words[i]);
-    }
-    strcpy(words[i + 1], actCmd);
-    numWords++;
-
-    FILE *actFilePtr2 = fopen(actFile, "w");
-    if (!actFilePtr2)
-    {
-        perror("Error opening activities file");
-        return;
-    }
-
-    // Write the words back to the file
-    for (i = 0; i < numWords; i++)
-    {
-        fprintf(actFilePtr2, "%s\n", words[i]);
-    }
-
-    // Close the file
-    fclose(actFilePtr2);
-}
-
-void removeFromActFile(pid_t taskID)
-{
-    int fileDesc1 = open(actFile, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
-    close(fileDesc1);
-    FILE *actFilePtr = fopen(actFile, "r");
-    if (!actFilePtr)
-    {
-        perror("Error opening activities file");
-        return;
-    }
-
-    char taskNum[32];
-    sprintf(taskNum, "%d", taskID);
-
-    char word[128];
-    char words[2048][128];
-    int numWords = 0;
-
-    while (fscanf(actFilePtr, "%s", word) != EOF)
-    {
-        if (strncmp(word, taskNum, strlen(taskNum)) == 0)
-        {
-            continue;
-        }
-        strcpy(words[numWords], word);
-        numWords++;
-    }
-
-    fclose(actFilePtr);
-
-    FILE *actFilePtr2 = fopen(actFile, "w");
-    if (!actFilePtr2)
-    {
-        perror("Error opening activities file");
-        return;
-    }
-
-    // Write the words back to the file
-    for (int i = 0; i < numWords; i++)
-    {
-        fprintf(actFilePtr2, "%s\n", words[i]);
-    }
-
-    // Close the file
-    fclose(actFilePtr2);
-}
-void runSysCommand(char *cmd[], int inBG)
+void runSysCommand(char *cmd[], int inBG, char **token)
 {
     pid_t taskID = fork();
 
@@ -174,6 +174,9 @@ void runSysCommand(char *cmd[], int inBG)
     }
     else if (!taskID)
     {
+        signal(SIGTSTP, SIG_DFL);
+        signal(SIGCHLD, SIG_IGN);
+        signal(SIGINT, SIG_DFL);
         if (inBG)
         {
             int fileDesc = open(tempFile, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
@@ -198,15 +201,22 @@ void runSysCommand(char *cmd[], int inBG)
             snprintf(allTasks[currentTaskIndex].taskCommand, MAX_COMMAND_NAME, "%s", cmd[0]);
             currentTaskIndex++;
 
-            addToActFile(taskID, cmd[0]);
+            insertInOrder(&activity, token, "running", taskID);
         }
         else
         {
             time_t beginTime, finishTime;
             beginTime = time(NULL);
-            waitpid(taskID, NULL, 0);
+            fgID = taskID;
+            int i = 0;
+            fgName = (char **)malloc(sizeof(char *) * 100);
+            while(token[i] != NULL){
+                fgName[i] = strdup(token[i]);
+                i++;
+            }
+            waitpid(taskID, NULL, WUNTRACED);
+            fgID = -1;
             finishTime = time(NULL);
-            // printf("command took %ld seconds\n", (long)finishTime - beginTime);
             if (difftime(finishTime, beginTime) > 2)
             {
                 TLE_time = (int)difftime(finishTime, beginTime);
@@ -246,5 +256,5 @@ void sysCmd_func(char *command, char **token, int isBackground)
     }
     cmd[argIdx] = NULL;
 
-    runSysCommand(cmd, isBackground);
+    runSysCommand(cmd, isBackground, token);
 }

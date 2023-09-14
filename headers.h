@@ -15,6 +15,10 @@
 #include <sys/wait.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <signal.h>
+#include <termios.h>
+#include <ctype.h>
+#include <sys/select.h>
 #include "prompt.h"
 #include "distribute.h"
 #include "commands.h"
@@ -25,5 +29,9 @@
 #include "sysCmd.h"
 #include "activities.h"
 #include "iman.h"
+#include "ping.h"
+#include "fg.h"
+#include "bg.h"
+#include "neonate.h"
 
 #endif

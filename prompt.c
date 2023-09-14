@@ -40,8 +40,4 @@ void prompt()
         }
     }
 
-    // getcwd(cwd, 4096);
-    // printf("<%s@%s:%s", user, system_name);
-    // printf("%s> ", home_dir);
-    // printf("<Everything is a file> ");
 }

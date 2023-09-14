@@ -117,6 +117,22 @@ void execute_command_without_pipe(char *token, int isBackground)
     {
         iman_func(args);
     }
+    else if (strcmp(args[0], "ping") == 0 || strcmp(args[0], "ping\n") == 0)
+    {
+        ping_func(args);
+    }
+    else if (strcmp(args[0], "fg") == 0 || strcmp(args[0], "fg\n") == 0)
+    {
+        fg_func(args);
+    }
+    else if (strcmp(args[0], "bg") == 0 || strcmp(args[0], "bg\n") == 0)
+    {
+        bg_func(args);
+    }
+    else if (strcmp(args[0], "neonate") == 0 || strcmp(args[0], "neonate\n") == 0)
+    {
+        neonate_func(args);
+    }
     else
     {
         input_end_pos += firstToken ? strlen(token) : strlen(token) + 1;
@@ -142,7 +158,6 @@ void handle_single_command_execution(char **commands, int i, int isLastCommand, 
     if (!isLastCommand)
         dup2(fd[1], STDOUT_FILENO);
     close(fd[0]);
-    // Assuming 'execute_command_without_pipe' is already defined
     execute_command_without_pipe(commands[i], 0);
     exit(0);
 }
@@ -200,9 +215,9 @@ void distribute(char *input)
     if (strstr(token, "pastevents") == 0 && strcmp(token, "\n") != 0)
     {
         FILE *file = fopen(".pastevents.txt", "r");
-        char lastLine[256]; // Adjust the buffer size as needed
+        char lastLine[256]; 
         char currentLine[256];
-        lastLine[0] = '\0'; // Initialize the last line buffer
+        lastLine[0] = '\0'; 
 
         while (fgets(currentLine, sizeof(currentLine), file) != NULL)
         {
@@ -213,13 +228,9 @@ void distribute(char *input)
 
         if (strcmp(lastLine, token) != 0)
         {
-            // printf("Equal\n");
-
             if (history_full)
             {
-                // Remove first line of file with file descrpitor fd
                 char buffer[4096];
-                // read content of file in buffer
                 int fd = open(".pastevents.txt", O_RDWR | O_CREAT, 0777);
                 lseek(fd, 0, SEEK_CUR);
                 read(fd, buffer, 4096);
@@ -281,57 +292,6 @@ void distribute(char *input)
             execute_command_without_pipe(commands[0], isBackground);
 
         free(commands);
-
-        // execute_command_without_pipe(token, isBackground);
-
-        // char *token_copy = strdup(token);
-        // // printf("%s\n", token);
-        // strcat(token_copy, " ");
-        // char *save_ptr;
-        // char *command = strtok_r(token_copy, " \t", &save_ptr);
-        // char** args = (char **)malloc(sizeof(char *) * 100);
-        // int idx = 0;
-        // while(command != NULL){
-        //     // printf("command: %s\n", command);
-        //     args[idx] = strdup(command);
-        //     command = strtok_r(NULL, " \t", &save_ptr);
-        //     idx++;
-        // }
-        // args[idx] = '\0';
-        // if (strcmp(args[0], "warp") == 0 || strcmp(args[0], "warp\n") == 0)
-        // {
-        //     warp_func(args);
-        // }
-        // else if (strcmp(args[0], "peek") == 0 || strcmp(args[0], "peek\n") == 0)
-        // {
-        //     peek_func(args);
-        // }
-        // else if (strcmp(args[0], "pastevents") == 0 || strcmp(args[0], "pastevents\n") == 0)
-        // {
-        //     pastevents_func(args);
-        // }
-        // else if (strcmp(args[0], "proclore") == 0 || strcmp(args[0], "proclore\n") == 0)
-        // {
-        //     proclore_func(args);
-        // }
-        // else if (strcmp(args[0], "seek") == 0 || strcmp(args[0], "seek\n") == 0)
-        // {
-        //     seek_func(args);
-        // }
-        // else
-        // {
-        //     input_end_pos +=  firstToken ? strlen(token) : strlen(token) + 1;
-        //     firstToken = 0;
-
-        //     if(copy_input[input_end_pos] == '&')
-        //     {
-        //         isBackground = 1;
-        //     }
-        //     if(input_end_pos < strlen(copy_input))
-        //     {
-        //         sysCmd_func(args[0], args, isBackground);
-        //     }
-        // }
         token = strtok_r(NULL, ";&", &save_ptr1);
     }
 }

@@ -1,8 +1,8 @@
 #include "headers.h"
 
+// Initialising the terminal
 void initialise_terminal()
 {
-
     int fd = open(".pastevents.txt", O_RDWR | O_CREAT, 0777);
     // Get number of lines in file
     int lines = 0;
@@ -34,11 +34,9 @@ void initialise_terminal()
     gethostname(system_name, 4096);
 }
 
+// Warp implementation
 void warp_func(char** token)
 {
-    // char *token = strtok_r(NULL, " ", &save_ptr);
-    // printf("%s\n", token);
-    // printf("Hi\n");
     int idx = 1;
     if (token[idx] == NULL)
     {
@@ -55,7 +53,6 @@ void warp_func(char** token)
             strcpy(destination_dir, home_dir);
             strcat(destination_dir, "/");
             strcat(destination_dir, token[idx] + 2);
-            // remove '' from destination_dir
             destination_dir[strlen(destination_dir) - 1] = '\0';
         }
         else if (token[idx][0] == '~')
@@ -71,8 +68,6 @@ void warp_func(char** token)
         else if (token[idx][0] == '.' && token[idx][1] == '.')
         {
             // go to parent directory
-            // find the last '/'
-            // printf("..\n");
             strcpy(destination_dir, cwd);
             int i = strlen(destination_dir) - 1;
             while (destination_dir[i] != '/')
@@ -83,8 +78,7 @@ void warp_func(char** token)
         }
         else if (token[idx][0] == '.' && token[idx][1] == '/')
         {
-            // add apth to current path
-            // printf("%s\n", cwd);
+            // add path to current path
             strcpy(destination_dir, cwd);
             strcat(destination_dir, "/");
             strcat(destination_dir, token[idx] + 2);
@@ -118,12 +112,8 @@ void warp_func(char** token)
         }
         else
         {
-            // printf("%s\n", token[idx]);
             printf("Invalid path\n");
         }
-
-        // printf("%s\n", token[idx]);
-        // token[idx] = strtok_r(NULL, " ", &save_ptr);
         idx++;
     }
 

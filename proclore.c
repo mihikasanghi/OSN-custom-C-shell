@@ -18,7 +18,8 @@ void proclore_func(char **token)
     }
     else
     {
-        token[idx][strlen(token[idx]) - 1] = '\0';
+        if(token[idx][strlen(token[idx]) - 1] == '\n')
+            token[idx][strlen(token[idx]) - 1] = '\0';
         pid = atoi(token[idx]);
     }
 
@@ -28,6 +29,8 @@ void proclore_func(char **token)
     fgets(buffer, sizeof(buffer), file);
     fclose(file);
 
+    fflush(stdout);
+    
     int process_pid, process_ppid, process_pgrp, process_session, process_tty_nr, process_tpgid;
     char process_comm[4096], process_state;
     long int process_vsize;
